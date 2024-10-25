@@ -1,26 +1,19 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
+   "target": "es5", // Hoặc "es6" nếu cần
     "module": "esnext",
+    "jsx": "react-jsx", // Giữ nguyên nếu bạn muốn sử dụng Transform mới
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
+    "isolatedModules": true, // Cần thiết khi sử dụng babel-loader
+    "noEmit": false // Không cần TypeScript emit file, Babel sẽ đảm nhận
   },
   "include": [
     "src"
-  ]
+  ],
+  "exclude": ["node_modules"]
 }
