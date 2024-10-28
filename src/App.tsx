@@ -1,26 +1,18 @@
 import { Button, Col, FloatButton, Modal, Row } from "antd";
 import buttonChatBot from "./assets/icons/buttonChatbot.svg";
-import avatarChatBot from "./assets/icons/avataChatbot.svg";
 import "./App.scss";
-import { Input } from "antd";
 import ReactDOM from "react-dom/client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChatHeader from "./components/ChatHeader";
 import ChatContent from "./components/ChatContent";
 import ChatFooter from "./components/ChatFooter";
-import {
-  onCreateConversationsBot,
-  onGetInfoBot,
-  onSendConversationsBot,
-} from "./apis/chatbot";
-import { text } from "stream/consumers";
+import { onCreateConversationsBot, onGetInfoBot } from "./apis/chatbot";
+import { convertStringFunc } from "./utility/convertString";
 
-interface Response {
-  text: string;
-  isUser: boolean;
-  time: string;
-  suggestive: string[];
-  loading: boolean;
+interface Payload {
+  model: string;
+  content: string;
+  type: string;
 }
 
 const AppChatBot = () => {
@@ -34,28 +26,37 @@ const AppChatBot = () => {
   const [question, setQuestion] = useState<string>("");
   const [conversationsBot, setConversationsBot] = useState<any>(null);
   const [streamData, setStreamData] = useState<any[]>([]);
+  const [isReload, setIsReload] = useState<boolean>(false);
+  const [payload, setPayload] = useState<Payload>({
+    model: infoData?.defaultModel,
+    content: "",
+    type: "text",
+  });
   const botId = process.env.REACT_APP_BOTID;
 
   const handleOpenChatBot = async () => {
-    setOpen(!open);
     if (!open) {
       const fetchInfo = await onGetInfoBot(botId);
       const resConversations = await onCreateConversationsBot(botId);
       setConversationsBot(resConversations);
       setInfoData(fetchInfo);
+
       setStreamData((prevResponses) => [
         ...prevResponses,
         {
-          text: fetchInfo?.openMessage,
+          text: convertStringFunc(fetchInfo?.openMessage),
           isUser: false,
           time: time,
-          suggestive: fetchInfo?.openQuestions,
+          suggestive: [],
+          questions: fetchInfo?.openQuestions,
           loading: false,
+          isQuestions: true,
         },
       ]);
     } else {
       setStreamData([]);
     }
+    setOpen(!open);
   };
 
   const handleReset = () => {
@@ -105,6 +106,8 @@ const AppChatBot = () => {
       }
 
       let accumulatedText = "";
+      let accumulatedTextReplace = "";
+      let suggestTextArray: string[] = [];
       // Đọc từng chunk của response
       while (true) {
         const { done, value } = await reader.read();
@@ -120,14 +123,25 @@ const AppChatBot = () => {
             const messageData = JSON.parse(apiResponse.message);
             // Kiểm tra nếu có content
             if (messageData && messageData.content) {
-              accumulatedText += messageData.content;
+              if (messageData?.type === "text") {
+                accumulatedText += messageData.content;
+                accumulatedTextReplace = convertStringFunc(accumulatedText);
+              }
+              if (messageData?.type === "suggest") {
+                suggestTextArray = messageData?.content;
+              }
+
               // eslint-disable-next-line no-loop-func
               setStreamData((prevData) => [
                 ...prevData.slice(0, -1), // Loại bỏ item "Đang trả lời ..."
                 {
-                  text: accumulatedText,
+                  text: accumulatedTextReplace,
                   isUser: false,
                   time: time,
+                  questions: [],
+                  isQuestions: false,
+                  suggestive: suggestTextArray,
+                  isCopy: true,
                 },
               ]);
             } else {
@@ -144,29 +158,61 @@ const AppChatBot = () => {
   };
 
   const handleSend = () => {
-    if (!question.trim()) return;
-    const payload = {
+    // setStreamData((prevData) => [
+    //   ...prevData,
+    //   {
+    //     text: question,
+    //     isUser: true,
+    //     time: time,
+    //   },
+    //   {
+    //     text: "Đang trả lời ...",
+    //     isUser: false,
+    //     time: time,
+    //     loading: true,
+    //   },
+    // ]);
+    setPayload((prevPayload: Payload) => ({
+      ...prevPayload,
       model: infoData?.defaultModel,
-      type: "text",
       content: question,
-    };
-    setStreamData((prevData) => [
-      ...prevData,
-      {
-        text: question,
-        isUser: true,
-        time: time, // Thời gian gửi câu hỏi
-      },
-      {
-        text: "Đang trả lời ...", // Thêm thông báo đang trả lời
-        isUser: false,
-        time: time, // Thời gian thêm thông báo
-        loading: true, // Cờ cho biết đang chờ phản hồi
-      },
-    ]);
-    onSendConversationsBot(botId, conversationsBot?.conversationId, payload); // Gửi cau hỏi
-    setQuestion(""); // Xóa input
+    }));
+    setIsReload(true);
   };
+
+  const handleClickSuggest = (text: string) => {
+    setQuestion(text);
+    setPayload((prevPayload: Payload) => ({
+      ...prevPayload,
+      model: infoData?.defaultModel,
+      content: text,
+    }));
+    setIsReload(true);
+    console.log("handleClickSuggest", text);
+  };
+
+  useEffect(() => {
+    if (isReload) {
+      if (!question.trim()) return;
+      setStreamData((prevData) => [
+        ...prevData,
+        {
+          text: question,
+          isUser: true,
+          time: time,
+        },
+        {
+          text: "Đang trả lời ...",
+          isUser: false,
+          time: time,
+          loading: true,
+        },
+      ]);
+      onSendConversationsBot(botId, conversationsBot?.conversationId, payload); // Gửi cau hỏi
+      setQuestion("");
+      setIsReload(false);
+    }
+  }, [isReload]);
 
   return (
     <div className="App">
@@ -183,7 +229,11 @@ const AppChatBot = () => {
             <ChatHeader title={infoData?.name} onReset={handleReset} />
             <div className="chat-box-content">
               <Row gutter={[0, 16]}>
-                <ChatContent streamData={streamData} />
+                <ChatContent
+                  title={infoData?.name}
+                  streamData={streamData}
+                  handleClickSuggest={handleClickSuggest}
+                />
               </Row>
             </div>
 

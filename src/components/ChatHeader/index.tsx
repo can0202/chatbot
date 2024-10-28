@@ -45,7 +45,7 @@ const ChatHeader = ({ title, onReset }: ChatHeaderProps) => {
                 />
               </svg>
             </Button>
-            <Button type="text" className="btn-chatbot btn-option">
+            <Button type="text" className="btn-chatbot btn-option" disabled>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"

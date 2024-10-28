@@ -54,9 +54,9 @@ body {
   }
 
   .ant-float-btn-group-wrap {
-    width: 415px;
+    width: 400px;
     right: 0;
-    border: .5px solid #bdbdbd;
+    box-shadow: 0px 2px 12px 0px rgba(28, 26, 26, 0.16);
     border-radius: 8px;
     background-color: #fff;
 
@@ -86,20 +86,10 @@ body {
       &::-webkit-scrollbar {
         width: 5px;
       }
-
-      // &::-webkit-scrollbar-thumb {
-      //   background-color: hsla(0, 2%, 42%, .451);
-      //   border-radius: 6px;
-      // }
-
-      // &::-webkit-scrollbar-track {
-      //   border-radius: 16px;
-      //   background: hsla(0, 0%, 87%, .29);
-      // }
     }
 
     &-header {
-      border-bottom: .5px solid #BDBDBD;
+      border-bottom: 0.5px solid #bdbdbd66;
 
       button {
         background-color: transparent;
@@ -108,7 +98,6 @@ body {
         margin: 0;
         outline: none;
         box-shadow: none;
-        cursor: pointer;
         min-width: auto;
         height: 32px;
         width: 32px;
@@ -168,6 +157,32 @@ body {
         color: #181414;
         margin: 0;
       }
+
+      .text {
+        .btn-copy {
+          padding: 4px;
+          border-radius: 20px;
+          border: 1px solid #FFF;
+          background: #F5F5F5;
+          position: absolute;
+          right: 0;
+          bottom: -25px;
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.3s ease-in-out;
+        }
+      }
+
+      &:hover {
+        cursor: context-menu;
+
+        .text {
+          .btn-copy {
+            opacity: 1;
+            visibility: visible;
+          }
+        }
+      }
     }
 
     &-time {
@@ -205,11 +220,38 @@ body {
     }
 
     &-question {
-      background-color: #FBF0F2;
-      padding: 10px 12px;
-      border-radius: 12px;
+      display: flex;
       width: fit-content;
       margin: 0 0 0 auto;
+      align-items: center;
+      gap: 8px;
+
+      p {
+        background-color: #FBF0F2;
+        padding: 10px 12px;
+        border-radius: 12px;
+      }
+
+      button {
+        height: 28px;
+        width: 28px;
+        padding: 4px;
+        border: 1px solid #FFF;
+        background: #F5F5F5;
+        border-radius: 50%;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease-in-out;
+      }
+
+      &:hover {
+        cursor: context-menu;
+
+        button {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
     }
 
     &-suggestive {
@@ -245,15 +287,66 @@ body {
       }
     }
 
+    &-suggestive-questions {
+      padding-top: 8px;
+
+      h5 {
+        margin-bottom: 8px;
+      }
+
+      ul {
+        list-style: none;
+        border-radius: 8px;
+
+        li {
+          &:not(:last-child) {
+            margin-bottom: 8px;
+          }
+
+          button {
+            background-color: #fff;
+            padding: 10px 12px;
+            width: 100%;
+            justify-content: flex-start;
+            white-space: normal;
+            height: auto;
+            text-align: left;
+          }
+        }
+      }
+
+      &.questions {
+        border-top: .5px dashed #bdbdbd;
+      }
+
+      &.suggestive {
+        ul {
+          li {
+            button {
+              border: .5px solid #bdbdbd;
+              padding: 8px 12px;
+            }
+          }
+        }
+
+      }
+    }
+
+
     &-footer {
-      border-top: .5px solid #BDBDBD;
+      box-shadow: 0px -2px 8px 0px rgba(234, 234, 234, 0.25);
 
       .ant-input-affix-wrapper {
-        padding: 8px 12px;
-        border-radius: 100px !important;
-        border-color: #BDBDBD !important;
-        gap: 12px;
-        height: 40px !important;
+        padding: 0;
+        border: none;
+        outline: none;
+        box-shadow: none;
+
+        &:focus {
+          border: none;
+          outline: none;
+          box-shadow: none;
+        }
 
         &::before {
           display: none;
@@ -302,5 +395,31 @@ body {
         }
       }
     }
+  }
+}
+
+.ant-popover {
+  .ant-menu {
+    border-inline-end: none !important;
+    width: 100%;
+
+    li {
+      padding: 4px;
+      height: auto;
+      margin: 0;
+      margin-bottom: 4px;
+      line-height: 25px;
+      width: 100%;
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+    }
+  }
+
+  .ant-popover-inner {
+    min-width: 150px;
   }
 }
