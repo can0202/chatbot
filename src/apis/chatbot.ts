@@ -95,3 +95,81 @@ export const onSendConversationsBot = async (
     console.error("Error in onSendConversationsBot:", err);
   }
 };
+
+export const onEditMessageBot = async (
+  botId: any,
+  conversationId: any,
+  messageId: any,
+  payload: any
+) => {
+  try {
+    const reqParams = {
+      model: payload.model,
+      message: {
+        type: payload.type,
+        content: payload.content,
+      },
+    };
+    const res = await fetch(
+      process.env.REACT_APP_API_URL +
+        `/${botId}/conversations/${conversationId}/regen-messages/${messageId}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "text/event-stream",
+          "Content-Type": "application/json",
+          "Accept-Language": "vi",
+        },
+        body: JSON.stringify(reqParams),
+      }
+    );
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const onDeleteMessageBot = async (
+  botId: any,
+  conversationId: any,
+  messageId: any
+) => {
+  try {
+    const res = await fetch(
+      process.env.REACT_APP_API_URL +
+        `/${botId}/conversations/${conversationId}/messages/${messageId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Accept-Language": "vi",
+        },
+      }
+    );
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const onStopMessageBot = async (botId: any, conversationId: any) => {
+  try {
+    const res = await fetch(
+      process.env.REACT_APP_API_URL +
+        `/${botId}/conversations/${conversationId}/stop-conversation`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Accept-Language": "vi",
+        },
+      }
+    );
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};

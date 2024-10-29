@@ -85,6 +85,17 @@ body {
 
       &::-webkit-scrollbar {
         width: 5px;
+        background-color: #bdbdbd66;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: hsla(0, 2%, 42%, .451);
+        border-radius: 16px;
+      }
+
+      &::-webkit-scrollbar-track {
+        border-radius: 16px;
+        background: hsla(0, 0%, 87%, .29);
       }
     }
 
@@ -183,6 +194,46 @@ body {
           }
         }
       }
+
+      .dot-pulse {
+        position: relative;
+        left: -9975px;
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        background-color: #D1132A;
+        color: #D1132A;
+        box-shadow: 9999px 0 0 -5px;
+        animation: dot-pulse 1.5s infinite linear;
+        animation-delay: 0.25s;
+      }
+
+      .dot-pulse::before,
+      .dot-pulse::after {
+        content: "";
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        background-color: #D1132A;
+        color: #D1132A;
+      }
+
+      .dot-pulse::before {
+        box-shadow: 9984px 0 0 -5px;
+        animation: dot-pulse-before 1.5s infinite linear;
+        animation-delay: 0s;
+      }
+
+      .dot-pulse::after {
+        box-shadow: 10014px 0 0 -5px;
+        animation: dot-pulse-after 1.5s infinite linear;
+        animation-delay: 0.5s;
+      }
+
+
     }
 
     &-time {
@@ -407,9 +458,18 @@ body {
       padding: 4px;
       height: auto;
       margin: 0;
-      margin-bottom: 4px;
+
       line-height: 25px;
       width: 100%;
+
+      &:not(:last-child) {
+        margin-bottom: 4px;
+      }
+
+      &.ant-menu-item-selected {
+        background-color: rgba(0, 0, 0, 0.06) !important;
+        color: #181414;
+      }
 
       span {
         display: flex;
@@ -421,5 +481,50 @@ body {
 
   .ant-popover-inner {
     min-width: 150px;
+  }
+}
+
+@keyframes dot-pulse-before {
+  0% {
+    box-shadow: 9984px 0 0 -5px;
+  }
+
+  30% {
+    box-shadow: 9984px 0 0 2px;
+  }
+
+  60%,
+  100% {
+    box-shadow: 9984px 0 0 -5px;
+  }
+}
+
+@keyframes dot-pulse {
+  0% {
+    box-shadow: 9999px 0 0 -5px;
+  }
+
+  30% {
+    box-shadow: 9999px 0 0 2px;
+  }
+
+  60%,
+  100% {
+    box-shadow: 9999px 0 0 -5px;
+  }
+}
+
+@keyframes dot-pulse-after {
+  0% {
+    box-shadow: 10014px 0 0 -5px;
+  }
+
+  30% {
+    box-shadow: 10014px 0 0 2px;
+  }
+
+  60%,
+  100% {
+    box-shadow: 10014px 0 0 -5px;
   }
 }
