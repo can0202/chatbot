@@ -1,5 +1,8 @@
-import { Button, Col, Row } from "antd";
+import { Button, Col, Menu, Popover, Row } from "antd";
 import avatarChatBot from "../../assets/icons/avataChatbot.svg";
+import gopYImg from "../../assets/icons/gop_y.svg";
+import supportImg from "../../assets/icons/ho_tro.svg";
+import contactImg from "../../assets/icons/lien_he.svg";
 
 interface ChatHeaderProps {
   title: string;
@@ -7,6 +10,47 @@ interface ChatHeaderProps {
 }
 
 const ChatHeader = ({ title, onReset }: ChatHeaderProps) => {
+  let contentMenu = (
+    <div style={{ display: "flex" }}>
+      <Menu
+        className="popover-menu"
+        onClick={(e) => {
+          e.domEvent.stopPropagation();
+        }}
+      >
+        <Menu.Item key={"edit"}>
+          <img src={gopYImg} alt="" />
+          <a
+            href={process.env.REACT_APP_CMS_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Góp ý phản ánh
+          </a>
+        </Menu.Item>
+        <Menu.Item key={"copy"}>
+          <img src={supportImg} alt="" />
+          <a
+            href={process.env.REACT_APP_CMS_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Yêu cầu hỗ trợ
+          </a>
+        </Menu.Item>
+        <Menu.Item key={"delete"}>
+          <img src={contactImg} alt="" />
+          <a
+            href={process.env.REACT_APP_CMS_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Liên hệ hợp tác
+          </a>
+        </Menu.Item>
+      </Menu>
+    </div>
+  );
   return (
     <div className="chat-box-header">
       <Row
@@ -45,20 +89,22 @@ const ChatHeader = ({ title, onReset }: ChatHeaderProps) => {
                 />
               </svg>
             </Button>
-            <Button type="text" className="btn-chatbot btn-option" disabled>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="4"
-                viewBox="0 0 18 4"
-                fill="none"
-              >
-                <path
-                  d="M2.39674 3.66655C1.44587 3.66655 0.666687 2.91593 0.666687 1.99993C0.666687 1.08393 1.44587 0.333313 2.39674 0.333313C3.34762 0.333313 4.1268 1.08393 4.1268 1.99993C4.1268 2.91593 3.34762 3.66655 2.39674 3.66655ZM9.00002 3.66655C8.04915 3.66655 7.26996 2.91593 7.26996 1.99993C7.26996 1.08393 8.04915 0.333313 9.00002 0.333313C9.95089 0.333313 10.7301 1.08393 10.7301 1.99993C10.7301 2.91593 9.95089 3.66655 9.00002 3.66655ZM15.6033 3.66655C14.6524 3.66655 13.8732 2.91593 13.8732 1.99993C13.8732 1.08393 14.6524 0.333313 15.6033 0.333313C16.5542 0.333313 17.3334 1.08393 17.3334 1.99993C17.3334 2.91593 16.5542 3.66655 15.6033 3.66655Z"
-                  fill="#181414"
-                />
-              </svg>
-            </Button>
+            <Popover content={contentMenu} placement="bottomLeft">
+              <Button type="text" className="btn-chatbot btn-option">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="4"
+                  viewBox="0 0 18 4"
+                  fill="none"
+                >
+                  <path
+                    d="M2.39674 3.66655C1.44587 3.66655 0.666687 2.91593 0.666687 1.99993C0.666687 1.08393 1.44587 0.333313 2.39674 0.333313C3.34762 0.333313 4.1268 1.08393 4.1268 1.99993C4.1268 2.91593 3.34762 3.66655 2.39674 3.66655ZM9.00002 3.66655C8.04915 3.66655 7.26996 2.91593 7.26996 1.99993C7.26996 1.08393 8.04915 0.333313 9.00002 0.333313C9.95089 0.333313 10.7301 1.08393 10.7301 1.99993C10.7301 2.91593 9.95089 3.66655 9.00002 3.66655ZM15.6033 3.66655C14.6524 3.66655 13.8732 2.91593 13.8732 1.99993C13.8732 1.08393 14.6524 0.333313 15.6033 0.333313C16.5542 0.333313 17.3334 1.08393 17.3334 1.99993C17.3334 2.91593 16.5542 3.66655 15.6033 3.66655Z"
+                    fill="#181414"
+                  />
+                </svg>
+              </Button>
+            </Popover>
           </div>
         </Col>
       </Row>

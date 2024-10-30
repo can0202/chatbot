@@ -1,5 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
+// Global Color
+$color-main: #d1132a;
+$color-white: #ffffff;
+$color-black: #181414;
+$color-gray: #F5F5F5;
+$color-border: #bdbdbd;
+
+// Font Family
+$font-family: "Nunito",
+sans-serif;
+
+// Font Weight
+$weight-regular: 400;
+$weight-medium: 500;
+$weight-bold: 700;
 
 * {
   margin: 0;
@@ -8,8 +23,22 @@
 }
 
 body {
-  font-family: "Nunito", sans-serif;
-  color: #181414;
+  font-family: $font-family;
+  color: $color-black;
+}
+
+:where(*) {
+  font-family: $font-family !important;
+}
+
+a {
+  cursor: default;
+}
+
+a[href] {
+  cursor: pointer;
+  color: $color-main;
+  font-weight: $weight-bold;
 }
 
 .chatbot-ai {
@@ -18,7 +47,7 @@ body {
   }
 
   .ant-float-btn {
-    background-color: #fff;
+    background-color: $color-white;
     height: 44px;
     border-radius: 50%;
     width: 44px;
@@ -48,7 +77,7 @@ body {
       height: 100%;
 
       svg {
-        color: #D1132A;
+        color: $color-main;
       }
     }
   }
@@ -58,7 +87,7 @@ body {
     right: 0;
     box-shadow: 0px 2px 12px 0px rgba(28, 26, 26, 0.16);
     border-radius: 8px;
-    background-color: #fff;
+    background-color: $color-white;
 
     @media screen and (max-width: 767px) {
       width: calc(100vw - 48px);
@@ -80,7 +109,7 @@ body {
     }
 
     &-content {
-      max-height: 400px;
+      height: 400px;
       overflow-y: scroll;
 
       &::-webkit-scrollbar {
@@ -114,7 +143,7 @@ body {
         width: 32px;
 
         &:hover {
-          color: #181414 !important;
+          color: $color-black !important;
           background: rgba(0, 0, 0, 0.04) !important;
         }
       }
@@ -137,23 +166,27 @@ body {
 
       h4 {
         font-size: 14px;
-        font-weight: 500;
         line-height: 20px;
         margin: 0;
+        font-weight: $weight-bold;
       }
     }
 
     &-reply {
-      background-color: #F5F5F5;
-      padding: 10px 12px;
-      border-radius: 12px;
+      background-color: $color-gray;
+      padding: 16px;
+      border-radius: 16px;
+      background-image: url('./assets/icons/bgchat.png');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
 
       .chat-box-avatar {
         .img {
           padding: 8px;
-          border: 1px solid #bdbdbd;
+          border: 1px solid $color-border;
           border-radius: 50%;
-          background-color: #fff;
+          background-color: $color-white;
           height: 40px;
           width: 40px;
 
@@ -165,7 +198,7 @@ body {
       }
 
       p {
-        color: #181414;
+        color: $color-black;
         margin: 0;
       }
 
@@ -173,8 +206,8 @@ body {
         .btn-copy {
           padding: 4px;
           border-radius: 20px;
-          border: 1px solid #FFF;
-          background: #F5F5F5;
+          border: 1px solid $color-white;
+          background: $color-gray;
           position: absolute;
           right: 0;
           bottom: -25px;
@@ -201,8 +234,8 @@ body {
         width: 10px;
         height: 10px;
         border-radius: 5px;
-        background-color: #D1132A;
-        color: #D1132A;
+        background-color: $color-main;
+        color: $color-main;
         box-shadow: 9999px 0 0 -5px;
         animation: dot-pulse 1.5s infinite linear;
         animation-delay: 0.25s;
@@ -217,8 +250,8 @@ body {
         width: 10px;
         height: 10px;
         border-radius: 5px;
-        background-color: #D1132A;
-        color: #D1132A;
+        background-color: $color-main;
+        color: $color-main;
       }
 
       .dot-pulse::before {
@@ -232,7 +265,6 @@ body {
         animation: dot-pulse-after 1.5s infinite linear;
         animation-delay: 0.5s;
       }
-
 
     }
 
@@ -263,7 +295,7 @@ body {
       }
 
       span {
-        background-color: #fff;
+        background-color: $color-white;
         position: relative;
         z-index: 11;
         padding: 0 12px;
@@ -278,7 +310,7 @@ body {
       gap: 8px;
 
       p {
-        background-color: #FBF0F2;
+        background-color: $color-gray;
         padding: 10px 12px;
         border-radius: 12px;
       }
@@ -287,8 +319,8 @@ body {
         height: 28px;
         width: 28px;
         padding: 4px;
-        border: 1px solid #FFF;
-        background: #F5F5F5;
+        border: 1px solid $color-white;
+        background: $color-gray;
         border-radius: 50%;
         opacity: 0;
         visibility: hidden;
@@ -330,59 +362,121 @@ body {
         button {
           min-width: auto !important;
           padding: 8px 12px !important;
-          border: .5px solid #bdbdbd;
+          border: .5px solid $color-border;
           backdrop-filter: blur(8px);
           height: 36px !important;
-          color: #181414;
+          color: $color-black;
         }
       }
     }
 
     &-suggestive-questions {
-      padding-top: 8px;
-
       h5 {
         margin-bottom: 8px;
+        font-size: 14px;
       }
 
-      ul {
-        list-style: none;
-        border-radius: 8px;
-
-        li {
-          &:not(:last-child) {
-            margin-bottom: 8px;
-          }
-
-          button {
-            background-color: #fff;
-            padding: 10px 12px;
-            width: 100%;
-            justify-content: flex-start;
-            white-space: normal;
-            height: auto;
-            text-align: left;
-          }
-        }
+      button {
+        background-color: $color-gray;
+        padding: 10px 12px;
+        width: 100%;
+        justify-content: flex-start;
+        height: auto;
+        text-align: left;
       }
 
       &.questions {
-        border-top: .5px dashed #bdbdbd;
-      }
-
-      &.suggestive {
         ul {
+          list-style: none;
+          border-radius: 8px;
+
           li {
+            &:not(:last-child) {
+              margin-bottom: 8px;
+            }
+
             button {
-              border: .5px solid #bdbdbd;
-              padding: 8px 12px;
+              white-space: normal;
+
+              span {
+                width: 100%;
+              }
             }
           }
         }
-
       }
+
+
+
+      &.suggestive {
+        ul {
+          display: flex;
+          align-items: center;
+          list-style: none;
+          gap: 8px;
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+
+          &::-webkit-scrollbar {
+            display: none;
+          }
+
+
+        }
+
+        button {
+          white-space: normal;
+        }
+
+        .swiper:hover {
+
+          .swiper-button-prev,
+          .swiper-button-next {
+            opacity: 1;
+            visibility: visible;
+          }
+        }
+
+        .swiper-button-prev,
+        .swiper-button-next {
+          background: #bdbdbd;
+          border-radius: 50%;
+          width: 32px;
+          height: 32px;
+          top: 60%;
+          opacity: 0;
+          visibility: hidden;
+
+          &::after {
+            font-size: 14px;
+            font-weight: 500;
+            color: $color-white;
+          }
+        }
+      }
+
     }
 
+    &-eidting {
+      background: $color-white;
+      border-top: .5px solid rgba(60, 60, 67, 0.36);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .text {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .close {
+        display: flex;
+        cursor: pointer;
+      }
+    }
 
     &-footer {
       box-shadow: 0px -2px 8px 0px rgba(234, 234, 234, 0.25);
@@ -392,6 +486,10 @@ body {
         border: none;
         outline: none;
         box-shadow: none;
+
+        &-disabled {
+          background-color: transparent !important;
+        }
 
         &:focus {
           border: none;
@@ -427,17 +525,17 @@ body {
       &.ant-btn-default {
         background-color: #fbf0f2;
         border: 1px solid transparent;
-        color: #d1132a;
+        color: $color-main;
 
         &:hover {
           background-color: #ffeaec !important;
           border-color: #ffeaec !important;
-          color: #d1132a !important;
+          color: $color-main !important;
         }
       }
 
       &.ant-btn-primary {
-        background-color: #d1132a;
+        background-color: $color-main;
         border: 1px solid transparent;
         color: #fbf0f2;
 
@@ -468,13 +566,15 @@ body {
 
       &.ant-menu-item-selected {
         background-color: rgba(0, 0, 0, 0.06) !important;
-        color: #181414;
+        color: $color-black;
       }
 
-      span {
+      span,
+      a {
         display: flex;
         align-items: center;
         gap: 8px;
+        font-weight: $weight-regular;
       }
     }
   }

@@ -1,18 +1,17 @@
-import { Button, Col, Menu, message, Popover, Row, Tooltip } from "antd";
+import { Button, Col, Menu, message, Popover, Row } from "antd";
 import avatarChatBot from "../../assets/icons/avataChatbot.svg";
 import ChatSuggestive from "../ChatSuggestive";
-import { onDeleteMessageBot } from "../../apis/chatbot";
 
 interface ChatContentProps {
   title: string;
   streamData: any[];
   handleClickSuggest: (item: string) => void;
-  setQuestion: any;
-  setModalData: any;
-  setIsOpenModal: any;
+  setQuestion: (q: string) => void;
+  setModalData: (param: any) => void;
+  setIsOpenModal: (q: boolean) => void;
   handleDeleteMessage: (item: any) => void;
-  setIsEditing: any;
-  setIdEditing: any;
+  setIsEditing: (q: boolean) => void;
+  setQuestionEdit: (q: any) => void;
 }
 
 const ChatContent = ({
@@ -24,7 +23,7 @@ const ChatContent = ({
   setIsOpenModal,
   handleDeleteMessage,
   setIsEditing,
-  setIdEditing,
+  setQuestionEdit,
 }: ChatContentProps) => {
   const handleCopy = (params: any) => {
     navigator.clipboard
@@ -44,9 +43,8 @@ const ChatContent = ({
         handleCopy(item?.text);
         break;
       case "edit":
-        console.log("item: ", item);
-        setIdEditing(item?.id);
         setQuestion(item?.text);
+        setQuestionEdit(item?.text);
         setIsEditing(true);
         break;
       case "delete":
@@ -70,7 +68,7 @@ const ChatContent = ({
         break;
     }
   };
-
+  const uniqueId = () => Date.now() + Math.random().toString(36).substr(2, 9);
   return (
     <>
       {streamData?.map((item, index) => {
@@ -162,8 +160,13 @@ const ChatContent = ({
         );
         if (!item?.isUser) {
           return (
-            <Col xs={24} key={index}>
-              <div className="chat-box-reply">
+            <div key={`${index}${uniqueId}`}>
+              <div
+                className={`chat-box-reply ${
+                  item?.isQuestions ? "questions" : "suggestive"
+                }`}
+                style={{ marginBottom: "8px" }}
+              >
                 <Row gutter={[0, 8]}>
                   <Col xs={24}>
                     <div className="chat-box-avatar">
@@ -211,17 +214,15 @@ const ChatContent = ({
                       </div>
                     )}
                   </Col>
-                  {item?.isQuestions && (
-                    <Col xs={24}>
-                      <ChatSuggestive
-                        suggestive={item?.questions}
-                        handleClickSuggest={handleClickSuggest}
-                        isQuestions={item?.isQuestions}
-                      />
-                    </Col>
-                  )}
                 </Row>
               </div>
+              {item?.isQuestions && (
+                <ChatSuggestive
+                  suggestive={item?.questions}
+                  handleClickSuggest={handleClickSuggest}
+                  isQuestions={item?.isQuestions}
+                />
+              )}
               {item?.suggestive?.length > 0 && (
                 <ChatSuggestive
                   suggestive={item?.suggestive}
@@ -229,39 +230,38 @@ const ChatContent = ({
                   isQuestions={item?.isQuestions}
                 />
               )}
-            </Col>
+            </div>
           );
         }
         if (item?.isUser) {
           return (
-            <>
-              <Col xs={24} key={index}>
-                <div className="chat-box-time">
-                  <span>{item?.time}</span>
-                </div>
-              </Col>
-              <Col xs={24}>
-                <div className="chat-box-question">
-                  <Popover content={contentMenu} placement="bottomLeft">
-                    <Button type="text" className="btn-action">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="17"
-                        height="5"
-                        viewBox="0 0 17 5"
-                        fill="none"
-                      >
-                        <path
-                          d="M1.79598 4.16649C0.845104 4.16649 0.065918 3.41587 0.065918 2.49987C0.065918 1.58387 0.845104 0.833252 1.79598 0.833252C2.74685 0.833252 3.52603 1.58387 3.52603 2.49987C3.52603 3.41587 2.74685 4.16649 1.79598 4.16649ZM8.39925 4.16649C7.44838 4.16649 6.66919 3.41587 6.66919 2.49987C6.66919 1.58387 7.44838 0.833252 8.39925 0.833252C9.35012 0.833252 10.1293 1.58387 10.1293 2.49987C10.1293 3.41587 9.35012 4.16649 8.39925 4.16649ZM15.0025 4.16649C14.0517 4.16649 13.2725 3.41587 13.2725 2.49987C13.2725 1.58387 14.0517 0.833252 15.0025 0.833252C15.9534 0.833252 16.7326 1.58387 16.7326 2.49987C16.7326 3.41587 15.9534 4.16649 15.0025 4.16649Z"
-                          fill="#181414"
-                        />
-                      </svg>
-                    </Button>
-                  </Popover>
-                  <p>{item?.text}</p>
-                </div>
-              </Col>
-            </>
+            <div key={index + 1}>
+              <div className="chat-box-time" style={{ marginBottom: "8px" }}>
+                <span>{item?.time}</span>
+              </div>
+              <div
+                className="chat-box-question"
+                style={{ marginBottom: "8px" }}
+              >
+                <Popover content={contentMenu} placement="bottomLeft">
+                  <Button type="text" className="btn-action">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="17"
+                      height="5"
+                      viewBox="0 0 17 5"
+                      fill="none"
+                    >
+                      <path
+                        d="M1.79598 4.16649C0.845104 4.16649 0.065918 3.41587 0.065918 2.49987C0.065918 1.58387 0.845104 0.833252 1.79598 0.833252C2.74685 0.833252 3.52603 1.58387 3.52603 2.49987C3.52603 3.41587 2.74685 4.16649 1.79598 4.16649ZM8.39925 4.16649C7.44838 4.16649 6.66919 3.41587 6.66919 2.49987C6.66919 1.58387 7.44838 0.833252 8.39925 0.833252C9.35012 0.833252 10.1293 1.58387 10.1293 2.49987C10.1293 3.41587 9.35012 4.16649 8.39925 4.16649ZM15.0025 4.16649C14.0517 4.16649 13.2725 3.41587 13.2725 2.49987C13.2725 1.58387 14.0517 0.833252 15.0025 0.833252C15.9534 0.833252 16.7326 1.58387 16.7326 2.49987C16.7326 3.41587 15.9534 4.16649 15.0025 4.16649Z"
+                        fill="#181414"
+                      />
+                    </svg>
+                  </Button>
+                </Popover>
+                <p>{item?.text}</p>
+              </div>
+            </div>
           );
         }
       })}

@@ -9,8 +9,8 @@ import ChatFooter from "./components/ChatFooter";
 import {
   onCreateConversationsBot,
   onDeleteMessageBot,
-  onEditMessageBot,
   onGetInfoBot,
+  onStopMessageBot,
 } from "./apis/chatbot";
 import { convertStringFunc } from "./utility/convertString";
 
@@ -32,7 +32,7 @@ const AppChatBot = () => {
   const [conversationsBot, setConversationsBot] = useState<any>(null);
   const [streamData, setStreamData] = useState<any[]>([]);
   const [isReload, setIsReload] = useState<boolean>(false);
-  const [payload, setPayload] = useState<Payload>({
+  const [searchParam, setSearchParam] = useState<Payload>({
     model: infoData?.defaultModel,
     content: "",
     type: "text",
@@ -40,7 +40,9 @@ const AppChatBot = () => {
   const [messageId, setMessageId] = useState<any>(null);
   const botId = process.env.REACT_APP_BOTID;
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [idEditing, setIdEditing] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [questionEdit, setQuestionEdit] = useState<string>("");
+  const messageRef = useRef<HTMLDivElement>(null);
 
   const [modalData, setModalData] = useState<{
     title?: any;
@@ -59,6 +61,21 @@ const AppChatBot = () => {
     handleClose: () => {},
     width: 480,
   });
+
+  const uniqueId = () => Date.now() + Math.random().toString(36).substr(2, 9);
+
+  function removeFromMessage(messages: any[], textToDelete: string) {
+    // Tìm chỉ số của câu hỏi có nội dung `textToDelete`
+    const indexToDelete = messages?.findIndex(
+      (message) => message?.isUser && message?.text === textToDelete
+    );
+
+    // Nếu tìm thấy, cắt mảng từ vị trí của câu hỏi đến cuối mảng
+    if (indexToDelete !== -1) {
+      messages?.splice(indexToDelete);
+    }
+    return messages;
+  }
 
   const handleOpenChatBot = async () => {
     if (!open) {
@@ -91,7 +108,8 @@ const AppChatBot = () => {
       description:
         "Làm mới khung chat bạn sẽ không tìm lại được những thông tin đã hỏi. Bạn có chắc chắn không?",
       submitText: "Xác nhận",
-      handleSubmit: () => {
+      handleSubmit: async () => {
+        await onStopMessageBot(botId, conversationsBot?.conversationId);
         onResetQuestion();
         setIsOpenModal(false);
         setOpen(false);
@@ -110,12 +128,14 @@ const AppChatBot = () => {
     setStreamData([]);
   };
 
-  const onSendConversationsBot = async (
+  const sendConversationMessage = async (
     botId: any,
     conversationId: string,
-    payload: any
+    payload: any,
+    messageId?: string
   ): Promise<void> => {
     try {
+      setIsLoading(true);
       const reqParams = {
         model: payload.model,
         message: {
@@ -124,100 +144,13 @@ const AppChatBot = () => {
         },
       };
 
-      const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/${botId}/conversations/${conversationId}/messages`,
-        {
-          method: "POST",
-          headers: {
-            // Accept: "text/event-stream",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(reqParams),
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const reader = res.body?.getReader();
-      const decoder = new TextDecoder("utf-8");
-
-      if (!reader) {
-        throw new Error("Response body is null or streaming is not supported.");
-      }
-
-      let accumulatedText = "";
-      let accumulatedTextReplace = "";
-      let suggestTextArray: string[] = [];
-      // Đọc từng chunk của response
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        const regex = /data:\s*(\{.*\})/;
-        const match = chunk.match(regex);
-
-        if (match && match[1]) {
-          try {
-            const apiResponse = JSON.parse(match[1]);
-            const messageData = JSON.parse(apiResponse.message);
-            // Kiểm tra nếu có content
-            if (messageData && messageData.content) {
-              if (messageData?.type === "text") {
-                accumulatedText += messageData.content;
-                accumulatedTextReplace = convertStringFunc(accumulatedText);
-                const messageId = messageData?.preMessageId;
-                setMessageId(messageId);
-              }
-              if (messageData?.type === "suggest") {
-                suggestTextArray = messageData?.content;
-              }
-
-              // eslint-disable-next-line no-loop-func
-              setStreamData((prevData) => [
-                ...prevData.slice(0, -1), // Loại bỏ item "Đang trả lời ..."
-                {
-                  text: accumulatedTextReplace,
-                  isUser: false,
-                  time: time,
-                  questions: [],
-                  isQuestions: false,
-                  suggestive: suggestTextArray,
-                  isCopy: true,
-                },
-              ]);
-            } else {
-              console.warn("No content found in the message data.");
-            }
-          } catch (error) {
-            console.error("Failed to parse JSON string:", error);
-          }
-        }
-      }
-    } catch (err) {
-      console.error("Error in onSendConversationsBot:", err);
-    }
-  };
-
-  const onReSendConversationsBot = async (
-    botId: any,
-    conversationId: string,
-    messageId: string,
-    payload: any
-  ): Promise<void> => {
-    try {
-      const reqParams = {
-        model: payload.model,
-        message: {
-          type: payload.type,
-          content: payload.content,
-        },
-      };
+      // Chọn URL dựa trên sự hiện diện của messageId
+      const urlSuffix = messageId
+        ? `/regen-messages/${messageId}`
+        : "/messages";
 
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/${botId}/conversations/${conversationId}/regen-messages/${messageId}`,
+        `${process.env.REACT_APP_API_URL}/${botId}/conversations/${conversationId}${urlSuffix}`,
         {
           method: "POST",
           headers: {
@@ -290,26 +223,60 @@ const AppChatBot = () => {
       }
     } catch (err) {
       console.error("Error in onSendConversationsBot:", err);
+    } finally {
+      setIsLoading(false); // Đặt lại isLoading thành false khi API hoàn thành
     }
   };
 
   const handleSend = async () => {
     if (isEditing) {
-      setQuestion(question);
+      setStreamData((prevData) => {
+        const questionIndex = prevData.findIndex(
+          (message) => message.text === questionEdit
+        );
+        if (questionIndex !== -1) {
+          // return prevData.filter(
+          //   (_, index) => index !== questionIndex && index !== questionIndex + 1
+          // );
+          const newData = prevData.filter(
+            (_, index) => index !== questionIndex && index !== questionIndex + 1
+          );
+          // Thêm câu hỏi mới của user và trạng thái "Đang trả lời ..."
+          newData.push(
+            {
+              id: uniqueId(),
+              text: question,
+              isUser: true,
+              time: time,
+            },
+            {
+              id: uniqueId(),
+              text: "Đang trả lời ...",
+              isUser: false,
+              time: time,
+              loading: true,
+            }
+          );
+          return newData;
+        }
+        return prevData;
+      });
+
       const reqParams = {
         model: infoData?.defaultModel,
         type: "text",
         content: question,
       };
-      onReSendConversationsBot(
+      sendConversationMessage(
         botId,
         conversationsBot?.conversationId,
-        messageId,
-        reqParams
+        reqParams,
+        messageId
       );
+
       setQuestion("");
     } else {
-      setPayload((prevPayload: Payload) => ({
+      setSearchParam((prevPayload: Payload) => ({
         ...prevPayload,
         model: infoData?.defaultModel,
         content: question,
@@ -321,27 +288,13 @@ const AppChatBot = () => {
 
   const handleClickSuggest = (text: string) => {
     setQuestion(text);
-    setPayload((prevPayload: Payload) => ({
+    setSearchParam((prevPayload: Payload) => ({
       ...prevPayload,
       model: infoData?.defaultModel,
       content: text,
     }));
     setIsReload(true);
-    console.log("handleClickSuggest", text);
   };
-
-  function removeFromMessage(messages: any[], textToDelete: string) {
-    // Tìm chỉ số của câu hỏi có nội dung `textToDelete`
-    const indexToDelete = messages?.findIndex(
-      (message) => message?.isUser && message?.text === textToDelete
-    );
-
-    // Nếu tìm thấy, cắt mảng từ vị trí của câu hỏi đến cuối mảng
-    if (indexToDelete !== -1) {
-      messages?.splice(indexToDelete);
-    }
-    return messages;
-  }
 
   const handleDeleteMessage = async (item: any) => {
     const res = await onDeleteMessageBot(
@@ -355,11 +308,13 @@ const AppChatBot = () => {
     }
   };
 
+  const handleStopSend = async () => {
+    await onStopMessageBot(botId, conversationsBot?.conversationId);
+  };
+
   useEffect(() => {
     if (isReload) {
       if (!question.trim()) return;
-      const uniqueId = () =>
-        Date.now() + Math.random().toString(36).substr(2, 9);
       setStreamData((prevData) => [
         ...prevData,
         {
@@ -376,13 +331,24 @@ const AppChatBot = () => {
           loading: true,
         },
       ]);
-      onSendConversationsBot(botId, conversationsBot?.conversationId, payload); // Gửi cau hỏi
+      sendConversationMessage(
+        botId,
+        conversationsBot?.conversationId,
+        searchParam
+      );
       setQuestion("");
       setIsReload(false);
     }
   }, [isReload]);
 
-  console.log("streamData: ", streamData);
+  useEffect(() => {
+    if (messageRef.current) {
+      messageRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [streamData]);
 
   return (
     <div className="App">
@@ -398,29 +364,32 @@ const AppChatBot = () => {
           <div className="chat-box">
             <ChatHeader title={infoData?.name} onReset={handleReset} />
             <div className="chat-box-content">
-              <Row gutter={[0, 16]}>
-                <ChatContent
-                  title={infoData?.name}
-                  streamData={streamData}
-                  handleClickSuggest={handleClickSuggest}
-                  setQuestion={setQuestion}
-                  setModalData={setModalData}
-                  setIsOpenModal={setIsOpenModal}
-                  handleDeleteMessage={handleDeleteMessage}
-                  setIsEditing={setIsEditing}
-                  setIdEditing={setIdEditing}
-                />
-              </Row>
+              <ChatContent
+                title={infoData?.name}
+                streamData={streamData}
+                handleClickSuggest={handleClickSuggest}
+                setQuestion={setQuestion}
+                setModalData={setModalData}
+                setIsOpenModal={setIsOpenModal}
+                handleDeleteMessage={handleDeleteMessage}
+                setIsEditing={setIsEditing}
+                setQuestionEdit={setQuestionEdit}
+              />
+              <div ref={messageRef}></div>
             </div>
-
             <ChatFooter
               question={question}
               setQuestion={setQuestion}
               handleSend={handleSend}
+              isEditing={isEditing}
+              setIsEditing={setIsEditing}
+              isLoading={isLoading}
+              handleStopSend={handleStopSend}
             />
           </div>
         </FloatButton.Group>
       </div>
+
       {isOpenModal && (
         <Modal
           className="modal-chatbot"
