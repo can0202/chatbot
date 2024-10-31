@@ -47,8 +47,8 @@ const ChatSuggestive = ({
                       <path
                         d="M7.5 4.16675L12.5 10.0001L7.5 15.8334"
                         stroke="#181414"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
                   </Button>

@@ -13,6 +13,7 @@ import {
   onStopMessageBot,
 } from "./apis/chatbot";
 import { convertStringFunc } from "./utility/convertString";
+import { marked } from "marked";
 
 interface Payload {
   model: string;
@@ -84,10 +85,11 @@ const AppChatBot = () => {
       setConversationsBot(resConversations);
       setInfoData(fetchInfo);
 
+      const htmlContent = marked(fetchInfo?.openMessage);
       setStreamData((prevResponses) => [
         ...prevResponses,
         {
-          text: convertStringFunc(fetchInfo?.openMessage),
+          text: htmlContent,
           isUser: false,
           time: time,
           suggestive: [],
@@ -173,7 +175,6 @@ const AppChatBot = () => {
       }
 
       let accumulatedText = "";
-      let accumulatedTextReplace = "";
       let suggestTextArray: string[] = [];
       // Đọc từng chunk của response
       while (true) {
@@ -192,7 +193,6 @@ const AppChatBot = () => {
             if (messageData && messageData.content) {
               if (messageData?.type === "text") {
                 accumulatedText += messageData.content;
-                accumulatedTextReplace = convertStringFunc(accumulatedText);
                 const messageId = messageData?.preMessageId;
                 setMessageId(messageId);
               }
@@ -200,11 +200,14 @@ const AppChatBot = () => {
                 suggestTextArray = messageData?.content;
               }
 
+              // Chuyển đổi nội dung Markdown sang HTML bằng marked
+              const htmlContent = marked(accumulatedText);
+
               // eslint-disable-next-line no-loop-func
               setStreamData((prevData) => [
                 ...prevData.slice(0, -1), // Loại bỏ item "Đang trả lời ..."
                 {
-                  text: accumulatedTextReplace,
+                  text: htmlContent,
                   isUser: false,
                   time: time,
                   questions: [],
