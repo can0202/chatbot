@@ -8,12 +8,14 @@ interface ChatSuggestiveProps {
   suggestive: string[];
   handleClickSuggest: (item: string) => void;
   isQuestions?: boolean;
+  isLoading?: boolean;
 }
 
 const ChatSuggestive = ({
   suggestive,
   handleClickSuggest,
   isQuestions = true,
+  isLoading,
 }: ChatSuggestiveProps) => {
   return (
     <div
@@ -29,7 +31,11 @@ const ChatSuggestive = ({
             <ul>
               {suggestive?.map((item, index) => (
                 <li key={index}>
-                  <Button type="text" onClick={() => handleClickSuggest(item)}>
+                  <Button
+                    type="text"
+                    onClick={() => handleClickSuggest(item)}
+                    disabled={isLoading}
+                  >
                     {item}
                     <svg
                       width="20"
@@ -54,15 +60,19 @@ const ChatSuggestive = ({
               navigation={true}
               modules={[Navigation]}
               className="mySwiper"
-              centeredSlides={true}
-              slidesPerView={1.3}
+              // centeredSlides={true}
+              slidesPerView={1.4}
               spaceBetween={10}
               loop={true}
               // slidesPerView={"auto"}
             >
               {suggestive?.map((item, index) => (
                 <SwiperSlide key={index}>
-                  <Button type="text" onClick={() => handleClickSuggest(item)}>
+                  <Button
+                    type="text"
+                    onClick={() => handleClickSuggest(item)}
+                    disabled={isLoading}
+                  >
                     {item}
                   </Button>
                 </SwiperSlide>

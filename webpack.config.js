@@ -1,4 +1,6 @@
 const path = require("path");
+const Dotenv = require("dotenv-webpack");
+const webpack = require("webpack");
 
 module.exports = {
   entry: "./src/index.tsx", // File JS đầu vào của bạn
@@ -10,7 +12,7 @@ module.exports = {
   resolve: {
     extensions: [".tsx", ".ts", ".js", ".jsx"], // Thêm phần mở rộng của TypeScript và JSX
   },
-  mode: "development", // Hoặc 'production' nếu bạn muốn build cho môi trường production
+  mode: "production", // Hoặc 'production' nếu bạn muốn build cho môi trường production
   module: {
     rules: [
       {
@@ -31,10 +33,24 @@ module.exports = {
         type: "asset", // Hoặc bạn có thể sử dụng 'file-loader' nếu cần
         parser: {
           dataUrlCondition: {
-            maxSize: 8 * 1024, // Chuyển đổi file dưới 8KB thành base64
+            maxSize: 100 * 1024, // Chuyển đổi file dưới 100KB thành base64
           },
         },
       },
     ],
   },
+  plugins: [
+    new Dotenv(), // Tự động tải các biến môi trường từ file .env
+    new webpack.DefinePlugin({
+      "process.env.REACT_APP_BOTID": JSON.stringify(
+        process.env.REACT_APP_BOTID
+      ),
+      "process.env.REACT_APP_API_URL": JSON.stringify(
+        process.env.REACT_APP_API_URL
+      ),
+      "process.env.REACT_APP_CMS_URL": JSON.stringify(
+        process.env.REACT_APP_CMS_URL
+      ),
+    }),
+  ],
 };

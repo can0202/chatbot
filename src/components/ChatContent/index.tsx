@@ -12,6 +12,7 @@ interface ChatContentProps {
   handleDeleteMessage: (item: any) => void;
   setIsEditing: (q: boolean) => void;
   setQuestionEdit: (q: any) => void;
+  isLoading: boolean;
 }
 
 const ChatContent = ({
@@ -24,6 +25,7 @@ const ChatContent = ({
   handleDeleteMessage,
   setIsEditing,
   setQuestionEdit,
+  isLoading,
 }: ChatContentProps) => {
   const handleCopy = (params: any) => {
     navigator.clipboard
@@ -221,6 +223,7 @@ const ChatContent = ({
                   suggestive={item?.questions}
                   handleClickSuggest={handleClickSuggest}
                   isQuestions={item?.isQuestions}
+                  isLoading={isLoading}
                 />
               )}
               {item?.suggestive?.length > 0 && (
@@ -228,6 +231,7 @@ const ChatContent = ({
                   suggestive={item?.suggestive}
                   handleClickSuggest={handleClickSuggest}
                   isQuestions={item?.isQuestions}
+                  isLoading={isLoading}
                 />
               )}
             </div>
@@ -243,22 +247,25 @@ const ChatContent = ({
                 className="chat-box-question"
                 style={{ marginBottom: "8px" }}
               >
-                <Popover content={contentMenu} placement="bottomLeft">
-                  <Button type="text" className="btn-action">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="17"
-                      height="5"
-                      viewBox="0 0 17 5"
-                      fill="none"
-                    >
-                      <path
-                        d="M1.79598 4.16649C0.845104 4.16649 0.065918 3.41587 0.065918 2.49987C0.065918 1.58387 0.845104 0.833252 1.79598 0.833252C2.74685 0.833252 3.52603 1.58387 3.52603 2.49987C3.52603 3.41587 2.74685 4.16649 1.79598 4.16649ZM8.39925 4.16649C7.44838 4.16649 6.66919 3.41587 6.66919 2.49987C6.66919 1.58387 7.44838 0.833252 8.39925 0.833252C9.35012 0.833252 10.1293 1.58387 10.1293 2.49987C10.1293 3.41587 9.35012 4.16649 8.39925 4.16649ZM15.0025 4.16649C14.0517 4.16649 13.2725 3.41587 13.2725 2.49987C13.2725 1.58387 14.0517 0.833252 15.0025 0.833252C15.9534 0.833252 16.7326 1.58387 16.7326 2.49987C16.7326 3.41587 15.9534 4.16649 15.0025 4.16649Z"
-                        fill="#181414"
-                      />
-                    </svg>
-                  </Button>
-                </Popover>
+                {!isLoading && (
+                  <Popover content={contentMenu} placement="bottomLeft">
+                    <Button type="text" className="btn-action">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="17"
+                        height="5"
+                        viewBox="0 0 17 5"
+                        fill="none"
+                      >
+                        <path
+                          d="M1.79598 4.16649C0.845104 4.16649 0.065918 3.41587 0.065918 2.49987C0.065918 1.58387 0.845104 0.833252 1.79598 0.833252C2.74685 0.833252 3.52603 1.58387 3.52603 2.49987C3.52603 3.41587 2.74685 4.16649 1.79598 4.16649ZM8.39925 4.16649C7.44838 4.16649 6.66919 3.41587 6.66919 2.49987C6.66919 1.58387 7.44838 0.833252 8.39925 0.833252C9.35012 0.833252 10.1293 1.58387 10.1293 2.49987C10.1293 3.41587 9.35012 4.16649 8.39925 4.16649ZM15.0025 4.16649C14.0517 4.16649 13.2725 3.41587 13.2725 2.49987C13.2725 1.58387 14.0517 0.833252 15.0025 0.833252C15.9534 0.833252 16.7326 1.58387 16.7326 2.49987C16.7326 3.41587 15.9534 4.16649 15.0025 4.16649Z"
+                          fill="#181414"
+                        />
+                      </svg>
+                    </Button>
+                  </Popover>
+                )}
+
                 <p>{item?.text}</p>
               </div>
             </div>

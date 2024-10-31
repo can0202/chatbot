@@ -1,5 +1,5 @@
 import { Button, Col, FloatButton, Modal, Row } from "antd";
-import buttonChatBot from "./assets/icons/buttonChatbot.svg";
+import buttonChatBot from "./assets/icons/avataChatbot.svg";
 import "./App.scss";
 import ReactDOM from "react-dom/client";
 import { useEffect, useRef, useState } from "react";
@@ -357,7 +357,7 @@ const AppChatBot = () => {
           open={open}
           trigger="click"
           onClick={handleOpenChatBot}
-          type="primary"
+          type="default"
           icon={<img src={buttonChatBot} alt="VARs Connect Chatbot" />}
           tooltip={"Chúng tôi luôn sẵn sàng hỗ trợ"}
         >
@@ -374,6 +374,7 @@ const AppChatBot = () => {
                 handleDeleteMessage={handleDeleteMessage}
                 setIsEditing={setIsEditing}
                 setQuestionEdit={setQuestionEdit}
+                isLoading={isLoading}
               />
               <div ref={messageRef}></div>
             </div>
