@@ -7,11 +7,10 @@ interface ChatContentProps {
   streamData: any[];
   handleClickSuggest: (item: string) => void;
   setQuestion: (q: string) => void;
-  setModalData: (param: any) => void;
-  setIsOpenModal: (q: boolean) => void;
   handleDeleteMessage: (item: any) => void;
   setIsEditing: (q: boolean) => void;
   setQuestionEdit: (q: any) => void;
+  setIsToast: (q: any) => void;
   isLoading: boolean;
 }
 
@@ -20,18 +19,21 @@ const ChatContent = ({
   streamData,
   handleClickSuggest,
   setQuestion,
-  setModalData,
-  setIsOpenModal,
   handleDeleteMessage,
   setIsEditing,
   setQuestionEdit,
+  setIsToast,
   isLoading,
 }: ChatContentProps) => {
-  const handleCopy = (params: any) => {
+  const handleCopy = (htmlText: any) => {
+    // Sử dụng DOMParser để loại bỏ thẻ HTML
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlText, "text/html");
+    const textContent = doc.body.innerText;
     navigator.clipboard
-      .writeText(params)
+      .writeText(textContent)
       .then(() => {
-        message.success("Đã sao chép vào bộ nhớ tạm!");
+        setIsToast(true);
       })
       .catch((error) => {
         console.log(error);
@@ -46,25 +48,11 @@ const ChatContent = ({
         break;
       case "edit":
         setQuestion(item?.text);
-        setQuestionEdit(item?.text);
+        setQuestionEdit(item?.preMessageId);
         setIsEditing(true);
         break;
       case "delete":
-        setModalData({
-          title: "Thông báo",
-          description: "Bạn có muốn xóa đoạn chat này không?",
-          submitText: "Xác nhận",
-          handleSubmit: async () => {
-            handleDeleteMessage(item);
-            setIsOpenModal(false);
-          },
-          closeText: "Đóng",
-          handleClose: () => {
-            setIsOpenModal(false);
-          },
-          width: 380,
-        });
-        setIsOpenModal(true);
+        handleDeleteMessage(item);
         break;
       default:
         break;
@@ -178,44 +166,52 @@ const ChatContent = ({
                       <h4>{title} - Trợ lý ảo</h4>
                     </div>
                   </Col>
-                  <Col xs={24}>
-                    {item?.loading ? (
+
+                  {item?.loading ? (
+                    <Col xs={24}>
                       <div className="snippet" data-title="dot-pulse">
                         <div className="stage">
                           <div className="dot-pulse"></div>
                         </div>
                       </div>
-                    ) : (
-                      // <p>Đang trả lời...</p>
-                      <div className="text">
-                        <p dangerouslySetInnerHTML={{ __html: item?.text }}></p>
-                        {item?.isCopy && (
-                          <Button
-                            type="text"
-                            className="btn-copy"
-                            onClick={() => handleCopy(item?.text)}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="21"
-                              height="21"
-                              viewBox="0 0 21 21"
-                              fill="none"
-                            >
-                              <path
-                                d="M5.3999 9.66675C5.3999 7.30973 5.3999 6.13121 6.13214 5.39898C6.86437 4.66675 8.04288 4.66675 10.3999 4.66675H12.8999C15.2569 4.66675 16.4354 4.66675 17.1677 5.39898C17.8999 6.13121 17.8999 7.30973 17.8999 9.66675V13.8334C17.8999 16.1904 17.8999 17.369 17.1677 18.1012C16.4354 18.8334 15.2569 18.8334 12.8999 18.8334H10.3999C8.04288 18.8334 6.86437 18.8334 6.13214 18.1012C5.3999 17.369 5.3999 16.1904 5.3999 13.8334V9.66675Z"
-                                stroke="#181414"
-                              />
-                              <path
-                                d="M5.3999 16.3334C4.01919 16.3334 2.8999 15.2141 2.8999 13.8334V8.83341C2.8999 5.69072 2.8999 4.11937 3.87621 3.14306C4.85252 2.16675 6.42387 2.16675 9.56657 2.16675H12.8999C14.2806 2.16675 15.3999 3.28604 15.3999 4.66675"
-                                stroke="#181414"
-                              />
-                            </svg>
-                          </Button>
-                        )}
-                      </div>
-                    )}
-                  </Col>
+                    </Col>
+                  ) : (
+                    <>
+                      {item?.text && (
+                        <Col xs={24}>
+                          <div className="text">
+                            <p
+                              dangerouslySetInnerHTML={{ __html: item?.text }}
+                            ></p>
+                            {item?.isCopy && (
+                              <Button
+                                type="text"
+                                className="btn-copy"
+                                onClick={() => handleCopy(item?.text)}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="21"
+                                  height="21"
+                                  viewBox="0 0 21 21"
+                                  fill="none"
+                                >
+                                  <path
+                                    d="M5.3999 9.66675C5.3999 7.30973 5.3999 6.13121 6.13214 5.39898C6.86437 4.66675 8.04288 4.66675 10.3999 4.66675H12.8999C15.2569 4.66675 16.4354 4.66675 17.1677 5.39898C17.8999 6.13121 17.8999 7.30973 17.8999 9.66675V13.8334C17.8999 16.1904 17.8999 17.369 17.1677 18.1012C16.4354 18.8334 15.2569 18.8334 12.8999 18.8334H10.3999C8.04288 18.8334 6.86437 18.8334 6.13214 18.1012C5.3999 17.369 5.3999 16.1904 5.3999 13.8334V9.66675Z"
+                                    stroke="#181414"
+                                  />
+                                  <path
+                                    d="M5.3999 16.3334C4.01919 16.3334 2.8999 15.2141 2.8999 13.8334V8.83341C2.8999 5.69072 2.8999 4.11937 3.87621 3.14306C4.85252 2.16675 6.42387 2.16675 9.56657 2.16675H12.8999C14.2806 2.16675 15.3999 3.28604 15.3999 4.66675"
+                                    stroke="#181414"
+                                  />
+                                </svg>
+                              </Button>
+                            )}
+                          </div>
+                        </Col>
+                      )}
+                    </>
+                  )}
                 </Row>
               </div>
               {item?.isQuestions && (

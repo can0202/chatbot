@@ -73,8 +73,12 @@ const ChatFooter = ({
           placeholder="Hãy trò chuyện với tôi nhé"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          onPressEnter={() => handleSend()}
-          disabled={isLoading}
+          onPressEnter={() => {
+            if (!isLoading) {
+              handleSend();
+            }
+          }}
+          // disabled={isLoading}
           suffix={
             <>
               {isLoading ? (

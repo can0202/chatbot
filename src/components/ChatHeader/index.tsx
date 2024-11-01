@@ -21,7 +21,7 @@ const ChatHeader = ({ title, onReset }: ChatHeaderProps) => {
         <Menu.Item key={"edit"}>
           <img src={gopYImg} alt="" />
           <a
-            href={process.env.REACT_APP_CMS_URL}
+            href={`${process.env.REACT_APP_CMS_URL}/feedback`}
             target="_blank"
             rel="noreferrer"
           >
