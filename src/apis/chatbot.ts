@@ -168,7 +168,7 @@ export const onStopMessageBot = async (botId: any, conversationId: any) => {
       }
     );
     const data = await res.json();
-    return data;
+    return data?.data;
   } catch (err) {
     console.log(err);
   }

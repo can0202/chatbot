@@ -270,14 +270,13 @@ const AppChatBot = () => {
     await onStopMessageBot(botId, conversationsBot?.conversationId);
     setStreamData((prevData) =>
       prevData?.map((message) => {
-        // Kiểm tra nếu là tin nhắn "Đang trả lời ..."
         if (message?.isUser === false) {
           return {
             ...message,
-            loading: false, // Đặt loading thành false
+            loading: false,
           };
         }
-        return message; // Giữ nguyên các tin nhắn khác
+        return message;
       })
     );
   };
@@ -291,7 +290,6 @@ const AppChatBot = () => {
     onResetQuestion();
     setIsOpenModal(false);
     await onFirstChatBotMessage();
-    // setOpen(false);
   };
 
   useEffect(() => {
@@ -340,8 +338,6 @@ const AppChatBot = () => {
       setIsReload(false);
     }
   }, [isReload]);
-
-  console.log("streamData", streamData);
 
   useEffect(() => {
     if (messageRef.current) {
