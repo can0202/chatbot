@@ -1,15 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 
 // Global Color
 $color-main: #d1132a;
 $color-white: #ffffff;
 $color-black: #181414;
-$color-gray: #F5F5F5;
+$color-gray: #f5f5f5;
 $color-border: #bdbdbd;
 
 // Font Family
-$font-family: "Nunito",
-sans-serif;
+$font-family: "Nunito", sans-serif;
 
 // Font Weight
 $weight-regular: 400;
@@ -46,12 +45,13 @@ body {
     height: 44px;
     border-radius: 50%;
     width: 44px;
-    border: 1px solid #ECECEC;
+    border: 1px solid #ececec;
     padding: 6px;
     outline: none;
     -webkit-animation: phonering-alo-circle-img-anim 1s infinite ease-in-out;
     animation: phonering-alo-circle-img-anim 1s infinite ease-in-out;
-    box-shadow: 0 6px 16px 0 #d1132a24, 0 3px 6px -4px #d1132a30, 0 9px 28px 8px #d1132a1a;
+    box-shadow: 0 6px 16px 0 #d1132a24, 0 3px 6px -4px #d1132a30,
+      0 9px 28px 8px #d1132a1a;
   }
 
   .ant-float-btn-body,
@@ -101,7 +101,7 @@ body {
 
     &-bg {
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         height: 100%;
         width: 100%;
@@ -112,8 +112,6 @@ body {
         border-radius: 12px;
       }
     }
-
-
 
     &-header,
     &-footer,
@@ -135,13 +133,13 @@ body {
       }
 
       &::-webkit-scrollbar-thumb {
-        background-color: hsla(0, 2%, 42%, .451);
+        background-color: hsla(0, 2%, 42%, 0.451);
         border-radius: 16px;
       }
 
       &::-webkit-scrollbar-track {
         border-radius: 16px;
-        background: hsla(0, 0%, 87%, .29);
+        background: hsla(0, 0%, 87%, 0.29);
       }
     }
 
@@ -193,7 +191,7 @@ body {
       background-color: $color-gray;
       padding: 16px;
       border-radius: 16px;
-      background-image: url('./assets/icons/bgchat.png');
+      background-image: url("./assets/icons/bgchat.png");
       background-position: center;
       background-repeat: no-repeat;
       background-size: cover;
@@ -334,7 +332,6 @@ body {
         animation: dot-pulse-after 1.5s infinite linear;
         animation-delay: 0.5s;
       }
-
     }
 
     &-tootip {
@@ -353,11 +350,11 @@ body {
       -ms-transform: translateY(10px);
       -o-transform: translateY(10px);
       transform: translateY(10px);
-      -webkit-transition: all .25s ease-out;
-      -moz-transition: all .25s ease-out;
-      -ms-transition: all .25s ease-out;
-      -o-transition: all .25s ease-out;
-      transition: all .25s ease-out;
+      -webkit-transition: all 0.25s ease-out;
+      -moz-transition: all 0.25s ease-out;
+      -ms-transition: all 0.25s ease-out;
+      -o-transition: all 0.25s ease-out;
+      transition: all 0.25s ease-out;
       -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
       -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
       -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
@@ -412,7 +409,7 @@ body {
         transform: translateY(-50%);
         width: 100%;
         height: 1px;
-        background-color: #ECECEC;
+        background-color: #ececec;
       }
 
       &::after {
@@ -423,7 +420,7 @@ body {
         transform: translateY(-50%);
         width: 100%;
         height: 1px;
-        background-color: #ECECEC;
+        background-color: #ececec;
       }
 
       span {
@@ -494,12 +491,10 @@ body {
         button {
           min-width: auto !important;
           padding: 8px 12px !important;
-          border: .5px solid $color-border;
+          border: 0.5px solid $color-border;
           backdrop-filter: blur(8px);
           height: 36px !important;
           color: $color-black;
-
-
         }
       }
     }
@@ -509,7 +504,6 @@ body {
         margin-bottom: 8px;
         font-size: 14px;
       }
-
 
       &.questions {
         ul {
@@ -555,8 +549,6 @@ body {
           &::-webkit-scrollbar {
             display: none;
           }
-
-
         }
 
         button {
@@ -575,7 +567,6 @@ body {
         }
 
         .swiper:hover {
-
           .swiper-button-prev,
           .swiper-button-next {
             opacity: 1;
@@ -601,12 +592,11 @@ body {
           }
         }
       }
-
     }
 
     &-eidting {
       background: $color-white;
-      border-top: .5px solid rgba(60, 60, 67, 0.36);
+      border-top: 0.5px solid rgba(60, 60, 67, 0.36);
       padding: 8px 16px;
       display: flex;
       align-items: center;
@@ -687,7 +677,7 @@ body {
           padding: 6px 12px;
 
           &.ant-btn-default {
-            background-color: #FBF0F2;
+            background-color: #fbf0f2;
             border: 1px solid transparent;
             color: $color-main;
           }
@@ -695,7 +685,7 @@ body {
           &.ant-btn-primary {
             background-color: $color-main;
             border: 1px solid transparent;
-            color: #FBF0F2;
+            color: #fbf0f2;
           }
         }
       }
@@ -711,8 +701,8 @@ body {
       .toast {
         width: 85%;
         margin: 0 auto;
-        background-color: #6C6868;
-        border: .5px solid $color-border;
+        background-color: #6c6868;
+        border: 0.5px solid $color-border;
         padding: 6px 12px;
         color: $color-white;
         display: flex;
@@ -724,6 +714,9 @@ body {
           display: flex;
           align-items: center;
           gap: 8px;
+          span {
+            color: $color-white !important;
+          }
         }
 
         button {
@@ -737,7 +730,6 @@ body {
     }
   }
 }
-
 
 .ant-popover {
   .ant-menu {
@@ -773,6 +765,7 @@ body {
 
   .ant-popover-inner {
     min-width: 150px;
+    padding: 12px !important;
   }
 }
 
@@ -823,31 +816,31 @@ body {
 
 @-webkit-keyframes phonering-alo-circle-img-anim {
   0% {
-    -webkit-transform: rotate(0) scale(1) skew(1deg)
+    -webkit-transform: rotate(0) scale(1) skew(1deg);
   }
 
   10% {
-    -webkit-transform: rotate(-25deg) scale(1) skew(1deg)
+    -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
   }
 
   20% {
-    -webkit-transform: rotate(25deg) scale(1) skew(1deg)
+    -webkit-transform: rotate(25deg) scale(1) skew(1deg);
   }
 
   30% {
-    -webkit-transform: rotate(-25deg) scale(1) skew(1deg)
+    -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
   }
 
   40% {
-    -webkit-transform: rotate(25deg) scale(1) skew(1deg)
+    -webkit-transform: rotate(25deg) scale(1) skew(1deg);
   }
 
   50% {
-    -webkit-transform: rotate(0) scale(1) skew(1deg)
+    -webkit-transform: rotate(0) scale(1) skew(1deg);
   }
 
   100% {
-    -webkit-transform: rotate(0) scale(1) skew(1deg)
+    -webkit-transform: rotate(0) scale(1) skew(1deg);
   }
 }
 
@@ -859,31 +852,31 @@ body {
 
   10% {
     -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
-    transform: rotate(-25deg) scale(1) skew(1deg)
+    transform: rotate(-25deg) scale(1) skew(1deg);
   }
 
   20% {
     -webkit-transform: rotate(25deg) scale(1) skew(1deg);
-    transform: rotate(25deg) scale(1) skew(1deg)
+    transform: rotate(25deg) scale(1) skew(1deg);
   }
 
   30% {
     -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
-    transform: rotate(-25deg) scale(1) skew(1deg)
+    transform: rotate(-25deg) scale(1) skew(1deg);
   }
 
   40% {
     -webkit-transform: rotate(25deg) scale(1) skew(1deg);
-    transform: rotate(25deg) scale(1) skew(1deg)
+    transform: rotate(25deg) scale(1) skew(1deg);
   }
 
   50% {
     -webkit-transform: rotate(0) scale(1) skew(1deg);
-    transform: rotate(0) scale(1) skew(1deg)
+    transform: rotate(0) scale(1) skew(1deg);
   }
 
   100% {
     -webkit-transform: rotate(0) scale(1) skew(1deg);
-    transform: rotate(0) scale(1) skew(1deg)
+    transform: rotate(0) scale(1) skew(1deg);
   }
 }
