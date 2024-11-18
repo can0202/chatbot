@@ -51,6 +51,9 @@ module.exports = {
       "process.env.REACT_APP_CMS_URL": JSON.stringify(
         process.env.REACT_APP_CMS_URL
       ),
+      "process.env.REACT_APP_TAG_BETA": JSON.stringify(
+        process.env.REACT_APP_TAG_BETA
+      ),
     }),
   ],
 };

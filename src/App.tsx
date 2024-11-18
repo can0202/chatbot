@@ -129,7 +129,27 @@ const AppChatBot = () => {
       );
 
       if (!res.ok) {
-        throw new Error("Network response was not ok");
+        if (res?.status === 429) {
+          const errorResponse = await res.json();
+          setStreamData((prevData) =>
+            prevData.filter((msg) => !(msg.isUser === false && msg.loading))
+          );
+          setStreamData((prevData) => [
+            ...prevData,
+            {
+              text: errorResponse.message || "Too Many Requests",
+              isUser: false,
+              time: time,
+              questions: [],
+              isQuestions: false,
+              suggestive: [],
+              isCopy: false,
+              loading: false,
+            },
+          ]);
+          return;
+        }
+        throw new Error(`Network response was not ok: ${res?.status}`);
       }
 
       const reader = res.body?.getReader();
@@ -316,7 +336,6 @@ const AppChatBot = () => {
           searchParam
         );
         setStreamData((prevData) => {
-          // Xác định vị trí của tin nhắn gần nhất để cập nhật `preMessageId`
           const lastUserMessageIndex = prevData.findIndex(
             (msg) => msg.text === question && msg.isUser
           );

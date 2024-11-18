@@ -1,4 +1,4 @@
-import { Button, Col, Menu, Popover, Row } from "antd";
+import { Badge, Button, Col, Menu, Popover, Row } from "antd";
 import avatarChatBot from "../../assets/icons/avataChatbot.svg";
 import gopYImg from "../../assets/icons/gop_y.svg";
 import supportImg from "../../assets/icons/ho_tro.svg";
@@ -63,6 +63,9 @@ const ChatHeader = ({ title, onReset }: ChatHeaderProps) => {
           <div className="chat-box-avatar">
             <img src={avatarChatBot} alt={title} />
             <h4>{title} - Trợ lý ảo</h4>
+            {process.env.REACT_APP_TAG_BETA && (
+              <Badge count={"Beta"} color="#FBF0F2" />
+            )}
           </div>
         </Col>
         <Col>
