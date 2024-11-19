@@ -1,8 +1,6 @@
 import { Badge, Button, Col, Menu, Popover, Row } from "antd";
 import avatarChatBot from "../../assets/icons/avataChatbot.svg";
 import gopYImg from "../../assets/icons/gop_y.svg";
-import supportImg from "../../assets/icons/ho_tro.svg";
-import contactImg from "../../assets/icons/lien_he.svg";
 
 interface ChatHeaderProps {
   title: string;
@@ -26,26 +24,6 @@ const ChatHeader = ({ title, onReset }: ChatHeaderProps) => {
             rel="noreferrer"
           >
             Góp ý phản ánh
-          </a>
-        </Menu.Item>
-        <Menu.Item key={"copy"}>
-          <img src={supportImg} alt="" />
-          <a
-            href={process.env.REACT_APP_CMS_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Yêu cầu hỗ trợ
-          </a>
-        </Menu.Item>
-        <Menu.Item key={"delete"}>
-          <img src={contactImg} alt="" />
-          <a
-            href={process.env.REACT_APP_CMS_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Liên hệ hợp tác
           </a>
         </Menu.Item>
       </Menu>

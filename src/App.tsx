@@ -1,7 +1,6 @@
-import { Button, Col, FloatButton, Row, Tooltip } from "antd";
+import { Button, Col, FloatButton, Row } from "antd";
 import buttonChatBot from "./assets/icons/avataChatbot.svg";
 import "./App.scss";
-import ReactDOM from "react-dom/client";
 import { useEffect, useRef, useState } from "react";
 import ChatHeader from "./components/ChatHeader";
 import ChatContent from "./components/ChatContent";
@@ -44,6 +43,7 @@ const AppChatBot = () => {
   const [questionEdit, setQuestionEdit] = useState<string>("");
   const [isToast, setIsToast] = useState<boolean>(false);
   const messageRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const [showTooltip, setShowTooltip] = useState<boolean>(true);
   const [isFirstMessageSent, setIsFirstMessageSent] = useState<boolean>(false);
 
@@ -310,6 +310,11 @@ const AppChatBot = () => {
     onResetQuestion();
     setIsOpenModal(false);
     await onFirstChatBotMessage();
+    setTimeout(() => {
+      if (headerRef.current) {
+        headerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }, 0);
   };
 
   useEffect(() => {
@@ -386,10 +391,11 @@ const AppChatBot = () => {
           type="default"
           icon={<img src={buttonChatBot} alt="VARs Connect Chatbot" />}
           tooltip={false}
+          className={!open ? "phone-ring" : ""}
         >
           <div className={`chat-box ${isOpenModal ? "chat-box-bg" : ""}`}>
             <ChatHeader title={infoData?.name} onReset={handleResetHeader} />
-            <div className="chat-box-content">
+            <div className="chat-box-content" ref={headerRef}>
               <ChatContent
                 title={infoData?.name}
                 streamData={streamData}

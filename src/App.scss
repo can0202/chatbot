@@ -8,7 +8,8 @@ $color-gray: #f5f5f5;
 $color-border: #bdbdbd;
 
 // Font Family
-$font-family: "Nunito", sans-serif;
+$font-family: "Nunito",
+sans-serif;
 
 // Font Weight
 $weight-regular: 400;
@@ -40,19 +41,51 @@ body {
     bottom: 30px;
   }
 
-  .ant-float-btn {
-    background-color: $color-white;
-    height: 44px;
-    border-radius: 50%;
-    width: 44px;
-    border: 1px solid #ececec;
-    padding: 6px;
-    outline: none;
-    -webkit-animation: phonering-alo-circle-img-anim 1s infinite ease-in-out;
-    animation: phonering-alo-circle-img-anim 1s infinite ease-in-out;
-    box-shadow: 0 6px 16px 0 #d1132a24, 0 3px 6px -4px #d1132a30,
-      0 9px 28px 8px #d1132a1a;
+  .phone-ring {
+    .ant-float-btn {
+      position: relative;
+      background-color: $color-white;
+      height: 44px;
+      border-radius: 50%;
+      width: 44px;
+      border: 1px solid #ececec;
+      padding: 6px;
+      outline: none;
+      -webkit-animation: phonering-alo-circle-img-anim 1s infinite ease-in-out;
+      animation: phonering-alo-circle-img-anim 1s infinite ease-in-out;
+      box-shadow: 0 6px 16px 0 #d1132a24, 0 3px 6px -4px #d1132a30,
+        0 9px 28px 8px #d1132a1a;
+      bottom: 0;
+      right: 0;
+
+      &::after,
+      &::before {
+        content: '';
+        position: absolute;
+        // top: 50%;
+        // left: 50%;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        border: 2px solid rgba(209, 19, 42, 0.1019607843);
+        /* Màu của sóng */
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+        z-index: -1;
+        /* Đặt phía sau FloatButton */
+        animation: wave 1.5s infinite ease-out;
+      }
+
+      &::after {
+        animation-delay: 0.75s;
+        /* Lớp sóng thứ hai xuất hiện chậm hơn */
+      }
+    }
   }
+
+
 
   .ant-float-btn-body,
   .ant-float-btn-body:hover {
@@ -579,6 +612,7 @@ body {
         }
 
         .swiper:hover {
+
           .swiper-button-prev,
           .swiper-button-next {
             opacity: 1;
@@ -726,6 +760,7 @@ body {
           display: flex;
           align-items: center;
           gap: 8px;
+
           span {
             color: $color-white !important;
           }
@@ -827,68 +862,126 @@ body {
 }
 
 @-webkit-keyframes phonering-alo-circle-img-anim {
+  // 0% {
+  //   -webkit-transform: rotate(0) scale(1) skew(1deg);
+  // }
+
+  // 10% {
+  //   -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
+  // }
+
+  // 20% {
+  //   -webkit-transform: rotate(25deg) scale(1) skew(1deg);
+  // }
+
+  // 30% {
+  //   -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
+  // }
+
+  // 40% {
+  //   -webkit-transform: rotate(25deg) scale(1) skew(1deg);
+  // }
+
+  // 50% {
+  //   -webkit-transform: rotate(0) scale(1) skew(1deg);
+  // }
+
+  // 100% {
+  //   -webkit-transform: rotate(0) scale(1) skew(1deg);
+  // }
   0% {
-    -webkit-transform: rotate(0) scale(1) skew(1deg);
+    transform: rotate(0deg);
   }
 
   10% {
-    -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
+    transform: rotate(10deg);
   }
 
   20% {
-    -webkit-transform: rotate(25deg) scale(1) skew(1deg);
+    transform: rotate(-10deg);
   }
 
   30% {
-    -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
+    transform: rotate(10deg);
   }
 
   40% {
-    -webkit-transform: rotate(25deg) scale(1) skew(1deg);
+    transform: rotate(-10deg);
   }
 
   50% {
-    -webkit-transform: rotate(0) scale(1) skew(1deg);
-  }
-
-  100% {
-    -webkit-transform: rotate(0) scale(1) skew(1deg);
+    transform: rotate(0deg);
   }
 }
 
 @keyframes phonering-alo-circle-img-anim {
+  // 0% {
+  //   -webkit-transform: rotate(0) scale(1) skew(1deg);
+  //   transform: rotate(0) scale(1) skew(1deg);
+  // }
+
+  // 10% {
+  //   -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
+  //   transform: rotate(-25deg) scale(1) skew(1deg);
+  // }
+
+  // 20% {
+  //   -webkit-transform: rotate(25deg) scale(1) skew(1deg);
+  //   transform: rotate(25deg) scale(1) skew(1deg);
+  // }
+
+  // 30% {
+  //   -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
+  //   transform: rotate(-25deg) scale(1) skew(1deg);
+  // }
+
+  // 40% {
+  //   -webkit-transform: rotate(25deg) scale(1) skew(1deg);
+  //   transform: rotate(25deg) scale(1) skew(1deg);
+  // }
+
+  // 50% {
+  //   -webkit-transform: rotate(0) scale(1) skew(1deg);
+  //   transform: rotate(0) scale(1) skew(1deg);
+  // }
+
+  // 100% {
+  //   -webkit-transform: rotate(0) scale(1) skew(1deg);
+  //   transform: rotate(0) scale(1) skew(1deg);
+  // }
   0% {
-    -webkit-transform: rotate(0) scale(1) skew(1deg);
-    transform: rotate(0) scale(1) skew(1deg);
+    transform: rotate(0deg);
   }
 
   10% {
-    -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
-    transform: rotate(-25deg) scale(1) skew(1deg);
+    transform: rotate(10deg);
   }
 
   20% {
-    -webkit-transform: rotate(25deg) scale(1) skew(1deg);
-    transform: rotate(25deg) scale(1) skew(1deg);
+    transform: rotate(-10deg);
   }
 
   30% {
-    -webkit-transform: rotate(-25deg) scale(1) skew(1deg);
-    transform: rotate(-25deg) scale(1) skew(1deg);
+    transform: rotate(10deg);
   }
 
   40% {
-    -webkit-transform: rotate(25deg) scale(1) skew(1deg);
-    transform: rotate(25deg) scale(1) skew(1deg);
+    transform: rotate(-10deg);
   }
 
   50% {
-    -webkit-transform: rotate(0) scale(1) skew(1deg);
-    transform: rotate(0) scale(1) skew(1deg);
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes wave {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
   }
 
   100% {
-    -webkit-transform: rotate(0) scale(1) skew(1deg);
-    transform: rotate(0) scale(1) skew(1deg);
+    transform: scale(2.5);
+    opacity: 0;
   }
 }
