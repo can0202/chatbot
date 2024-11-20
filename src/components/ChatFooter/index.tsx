@@ -73,6 +73,7 @@ const ChatFooter = ({
           <Input
             placeholder="Hãy trò chuyện với tôi nhé"
             value={question}
+            maxLength={4000}
             onChange={(e) => setQuestion(e.target.value)}
             onPressEnter={() => {
               if (!isLoading) {
