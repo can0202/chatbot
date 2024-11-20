@@ -65,8 +65,8 @@ const AppChatBot = () => {
     const resConversations = await onCreateConversationsBot(botId);
     setConversationsBot(resConversations);
     setInfoData(fetchInfo);
-
-    const htmlContent = marked(fetchInfo?.openMessage);
+    const openMessage = fetchInfo?.openMessage;
+    const htmlContent = marked(openMessage);
     setStreamData((prevResponses) => [
       ...prevResponses,
       {
@@ -210,13 +210,40 @@ const AppChatBot = () => {
           }
         }
       }
+      setIsLoading(false);
       return preMessageId;
     } catch (err) {
       console.error("Error in onSendConversationsBot:", err);
+      setIsLoading(true);
+      // Xử lý lỗi mất mạng hoặc lỗi khác
+      const textString = `Hiện tại tôi không thể trả lời, bạn vui lòng thử lại trong giây lát hoặc liên hệ hotline <a href="tel:19003427">19003427</a>, email <a href="mailto:cskh@varsconnect.vn">cskh@varsconnect.vn</a> nếu cần hỗ trợ gấp. Trân trọng.`;
+      setTimeout(() => {
+        setStreamData((prevData) =>
+          prevData.filter((msg) => !(msg.isUser === false && msg.loading))
+        );
+
+        setStreamData((prevData) => [
+          ...prevData,
+          {
+            text: marked(textString),
+            isUser: false,
+            time: time,
+            questions: [],
+            isQuestions: false,
+            suggestive: [],
+            isCopy: false,
+            loading: false,
+          },
+        ]);
+
+        setIsLoading(false);
+      }, 15000);
     } finally {
-      setIsLoading(false); // Đặt lại isLoading thành false khi API hoàn thành
+      // setIsLoading(false); // Đặt lại isLoading thành false khi API hoàn thành
     }
   };
+
+  console.log("isloading", isLoading);
 
   const handleSend = async () => {
     if (isEditing) {
