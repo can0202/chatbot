@@ -109,6 +109,9 @@ const AppChatBot = () => {
           type: payload.type,
           content: payload.content,
         },
+        properties: {
+          requestLLMContent: true,
+        },
       };
 
       // Chọn URL dựa trên sự hiện diện của messageId
@@ -242,8 +245,6 @@ const AppChatBot = () => {
       // setIsLoading(false); // Đặt lại isLoading thành false khi API hoàn thành
     }
   };
-
-  console.log("isloading", isLoading);
 
   const handleSend = async () => {
     if (isEditing) {
